@@ -30,25 +30,22 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    // Родительская категория
+    // Связи
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    // Дочерние категории
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id')->orderBy('sort_order');
     }
 
-    // Связь с вариантами
     public function variants(): BelongsToMany
     {
         return $this->belongsToMany(Variant::class);
     }
 
-    // Scope активных
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
