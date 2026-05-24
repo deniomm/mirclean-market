@@ -2,15 +2,10 @@
 
 namespace App\Filament\Resources\Variants\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class VariantsTable
 {
@@ -20,57 +15,40 @@ class VariantsTable
             ->columns([
                 TextColumn::make('sku')
                     ->label('SKU')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('h1')
-                    ->searchable(),
+                    ->label('Название')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('price')
-                    ->money()
+                    ->label('Цена')
+                    ->money('RUB')
                     ->sortable(),
                 TextColumn::make('stock')
-                    ->numeric()
+                    ->label('Остаток')
                     ->sortable(),
-                TextColumn::make('min_order_quantity')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('excerpt')
-                    ->searchable(),
-                TextColumn::make('meta_title')
-                    ->searchable(),
                 IconColumn::make('is_active')
+                    ->label('Активен')
                     ->boolean(),
                 TextColumn::make('product.name')
-                    ->searchable(),
+                    ->label('Группа')
+                    ->placeholder('—'),
                 TextColumn::make('primaryCategory.name')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Осн. категория')
+                    ->placeholder('—'),
+                TextColumn::make('categories.name')
+                    ->label('Категории')
+                    ->badge(),
             ])
             ->filters([
-                TrashedFilter::make(),
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
+                SelectFilter::make('product')
+                    ->relationship('product', 'name'),
+                SelectFilter::make('primaryCategory')
+                    ->relationship('primaryCategory', 'name'),
+                SelectFilter::make('categories')
+                    ->relationship('categories', 'name')
+                    ->multiple(),
             ]);
     }
 }
