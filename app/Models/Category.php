@@ -23,7 +23,6 @@ class Category extends Model implements HasMedia
         'h1',
         'meta_title',
         'meta_description',
-        'image',
         'is_active',
         'sort_order',
     ];
@@ -53,8 +52,10 @@ class Category extends Model implements HasMedia
         return $query->where('is_active', true);
     }
 
-    public function registerMediaCollections(): void
+    
+     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('images'); // Регистрируем коллекцию 'images'
+        $this->addMediaCollection('image') // для основного изображения категории
+             ->singleFile(); // только одно изображение
     }
 }
