@@ -51,4 +51,9 @@ class Variant extends Model implements HasMedia
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images'); // Регистрируем коллекцию 'images'
+    }
 }

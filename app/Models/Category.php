@@ -52,4 +52,9 @@ class Category extends Model implements HasMedia
     {
         return $query->where('is_active', true);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images'); // Регистрируем коллекцию 'images'
+    }
 }
