@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('h1')->nullable();
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
-            $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();

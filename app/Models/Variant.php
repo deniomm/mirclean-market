@@ -6,50 +6,49 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use NunoMaduro\LaravelSluggable\Attributes\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[Sluggable(from: 'name')]
-class Category extends Model implements HasMedia
+class Variant extends Model implements HasMedia
 {
     use SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
-        'parent_id',
+        'sku',
         'name',
         'slug',
         'h1',
+        'price',
+        'stock',
+        'min_order_quantity',
+        'excerpt',
+        'description',
         'meta_title',
         'meta_description',
-        'image',
         'is_active',
-        'sort_order',
+        'product_id',
+        'primary_category_id',
     ];
 
     protected $casts = [
+        'price' => 'decimal:2',
         'is_active' => 'boolean',
     ];
 
-    // Связи
-    public function parent(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+        return $this->belongsTo(Product::class);
     }
 
-    public function children(): HasMany
+    public function primaryCategory(): BelongsTo
     {
-        return $this->hasMany(Category::class, 'parent_id')->orderBy('sort_order');
+        return $this->belongsTo(Category::class, 'primary_category_id');
     }
 
-    public function variants(): BelongsToMany
+    public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Variant::class);
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
+        return $this->belongsToMany(Category::class);
     }
 }
